@@ -29,7 +29,7 @@ public class KanKanUrlTreeFactory implements UrlTreeFactory {
 	}
 
 	@Override
-	public List<String> getBookUrls() {
+	public List<String> getBookUrls(String entryUrl) {
 		List<String> bookUrls = new ArrayList<>();
 		Element body = helper.getBody(this.startUrl);
 		Elements nav = body.select("div.navigation > ul > li:eq(7) > a");
@@ -45,7 +45,7 @@ public class KanKanUrlTreeFactory implements UrlTreeFactory {
 	}
 
 	@Override
-	public List<String> getChapterUrls() {
+	public List<String> getChapterUrls(String entryUrl) {
 		// TODO Auto-generated method stub
 
 		Element body = helper.getBody("https://www.kuaikanmanhua.com/web/comic/272673/");
@@ -56,7 +56,7 @@ public class KanKanUrlTreeFactory implements UrlTreeFactory {
 	}
 
 	@Override
-	public List<String> getChapterImageUrls() {
+	public List<String> getChapterImageUrls(String entryUrl) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -64,7 +64,24 @@ public class KanKanUrlTreeFactory implements UrlTreeFactory {
 	@Override
 	public UrlTree getUrlTree() {
 		// TODO Auto-generated method stub
-		return null;
+		UrlTree tree=new UrlTree();
+		tree.setBookUrls(getBookUrls(this.startUrl));
+		
+		// add chapter url to bookurls
+		for(String url:tree.getBookUrls()) {
+			 tree.getChapterUrls().put(url, getChapterUrls(url));
+		}
+		
+		// add img urls  to chapter urls
+		for(List<String> urlList:tree.getChapterUrls().values()) {
+			for(String chapterUrl:urlList) {
+				 tree.getImageUrls().put(chapterUrl, getChapterImageUrls(chapterUrl));
+			}
+		}
+		
+		
+		
+		return tree;
 	}
 
 }

@@ -5,8 +5,8 @@ import java.util.List;
 public interface UrlTreeFactory {
 
 
-	public List<String> getBookUrls();
-	public List<String> getChapterUrls();
-	public List<String> getChapterImageUrls();
+	public List<String> getBookUrls(String entryUrl);
+	public List<String> getChapterUrls(String entryUrl);
+	public List<String> getChapterImageUrls(String entryUrl);
 	public UrlTree getUrlTree();
 }
