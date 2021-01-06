@@ -1,7 +1,6 @@
 package clawer.domain.image;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,18 +8,15 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Image {
 
 	private String id;
-	
+	private String chapterName;
 	private String chapterId;
-	
+	private String bookName;
 	private LocalDate publishDate;
 	
-	private LocalDateTime saveTime;
+	private String name;  // save file name
 
-	private String name;  // save file name, not include suffix
-
-	private String savePath; //relative save path, not include filename
+	private String savePath; 
 	
-	private String suffix; // for example:  the baseDir + savePath + name + suffix=absolute full path
 	
 	
 
@@ -40,21 +36,6 @@ public class Image {
 		this.publishDate = publishDate;
 	}
 
-	public LocalDateTime getSaveTime() {
-		return saveTime;
-	}
-
-	public void setSaveTime(LocalDateTime saveTime) {
-		this.saveTime = saveTime;
-	}
-
-	public String getSuffix() {
-		return suffix;
-	}
-
-	public void setSuffix(String suffix) {
-		this.suffix = suffix;
-	}
 
 	public void setId(String id) {
 		this.id = id;
@@ -79,5 +60,23 @@ public class Image {
 	public String getSavePath() {
 		return savePath;
 	}
+
+	public String getChapterName() {
+		return chapterName;
+	}
+
+	public void setChapterName(String chapterName) {
+		this.chapterName = chapterName;
+	}
+
+	public String getBookName() {
+		return bookName;
+	}
+
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
+	}
+	
+	
 
 }

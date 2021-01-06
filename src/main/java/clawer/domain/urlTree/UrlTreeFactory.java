@@ -1,12 +1,8 @@
 package clawer.domain.urlTree;
 
-import java.util.List;
+import clawer.extrator.UrlExtrator;
 
 public interface UrlTreeFactory {
 
-
-	public List<String> getBookUrls(String entryUrl);
-	public List<String> getChapterUrls(String entryUrl);
-	public List<String> getChapterImageUrls(String entryUrl);
-	public UrlTree getUrlTree();
+	public UrlTree getUrlTree(UrlExtrator extrator);
 }

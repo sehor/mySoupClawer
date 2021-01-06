@@ -15,8 +15,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import clawer.domain.urlTree.DefaultTreeFactory;
 import clawer.domain.urlTree.UrlTreeFactory;
-import clawer.website.kankan.KanKanUrlTreeFactory;
 
 @SpringBootTest
 class MyJsoupClawerApplicationTests {
@@ -76,12 +76,7 @@ class MyJsoupClawerApplicationTests {
 
 	// @Test
 	public void test1() {
-		String startUrl = "https://www.kuaikanmanhua.com/tag/0?state=1&sort=1&page=1";
-		UrlTreeFactory factory = new KanKanUrlTreeFactory(startUrl);
-		// List<String> bookUrls=factory.getBookUrls();
-		List<String> chapterUrls = factory.getChapterUrls();
-		// System.out.println(chapterUrls.size());
-		// chapterUrls.forEach(System.out::println);
+
 	}
 
 	@Test

@@ -11,6 +11,8 @@ public class Chapter {
 
 	private String id;
 	
+	private String bookName;
+	
 	private String bookId;
 
 	private String title;
@@ -20,14 +22,6 @@ public class Chapter {
     private Cover cover;
 	
 	
-	public String getBookId() {
-		return bookId;
-	}
-
-	public void setBookId(String bookId) {
-		this.bookId = bookId;
-	}
-
 	public List<String> getImageId() {
 		return imageId;
 	}
@@ -60,4 +54,21 @@ public class Chapter {
 		this.cover = cover;
 	}
 
+	public String getBookName() {
+		return bookName;
+	}
+
+	public void setBookName(String bookName) {
+		this.bookName = bookName;
+	}
+
+	public String getBookId() {
+		return bookId;
+	}
+
+	public void setBookId(String bookId) {
+		this.bookId = bookId;
+	}
+
+   	
 }

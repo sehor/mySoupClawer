@@ -12,6 +12,8 @@ import clawer.domain.other.Cover;
 
 @Document
 public class Book {
+	
+	private String webSiteName;
 
 	private String id;
 
@@ -116,4 +118,13 @@ public class Book {
 		this.publishDate = publishDate;
 	}
 
+	public String getWebSiteName() {
+		return webSiteName;
+	}
+
+	public void setWebSiteName(String webSiteName) {
+		this.webSiteName = webSiteName;
+	}
+ 
+	
 }
