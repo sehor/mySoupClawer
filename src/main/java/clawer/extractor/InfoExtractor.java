@@ -1,6 +1,6 @@
-package clawer.extrator;
+package clawer.extractor;
 
-public interface InfoExtrator {
+public interface InfoExtractor {
 
 	
 	 

@@ -1,4 +1,4 @@
-package clawer.extrator.website.kankan;
+package clawer.extractor.website.kankan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,9 +7,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import clawer.helper;
-import clawer.extrator.UrlExtrator;
+import clawer.extractor.UrlExtractor;
 
-public class KanKanUrlExtrator implements UrlExtrator{
+public class KanKanUrlExtrator implements UrlExtractor{
 
 	@Override
 	public List<String> getBookUrls(String startUrl) {

@@ -1,8 +1,8 @@
-package clawer.extrator;
+package clawer.extractor;
 
 import java.util.List;
 
-public interface UrlExtrator {
+public interface UrlExtractor {
 
 	public List<String> getBookUrls(String startUrl);
 	public List<String> getChapterUrls(String startUrl);

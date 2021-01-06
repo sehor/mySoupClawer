@@ -1,8 +1,8 @@
 package clawer.domain.urlTree;
 
-import clawer.extrator.UrlExtrator;
+import clawer.extractor.UrlExtractor;
 
 public interface UrlTreeFactory {
 
-	public UrlTree getUrlTree(UrlExtrator extrator);
+	public UrlTree getUrlTree(UrlExtractor extractor);
 }

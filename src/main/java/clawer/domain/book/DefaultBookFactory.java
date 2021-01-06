@@ -11,7 +11,7 @@ import clawer.domain.chapter.ChapterService;
 import clawer.domain.image.Image;
 import clawer.domain.image.ImageService;
 import clawer.domain.urlTree.UrlTree;
-import clawer.extrator.InfoExtrator;
+import clawer.extractor.InfoExtractor;
 
 public class DefaultBookFactory implements BookFactory {
 	@Autowired
@@ -31,7 +31,7 @@ public class DefaultBookFactory implements BookFactory {
 
 
 	@Override
-	public List<Book> booksFromWebsite(String websiteName,String statrUrl,InfoExtrator extrator) {
+	public List<Book> booksFromWebsite(String websiteName,String statrUrl,InfoExtractor extractor) {
 		// TODO Auto-generated method stub
 		List<Book> books = new ArrayList<>();
 
@@ -39,22 +39,22 @@ public class DefaultBookFactory implements BookFactory {
 		for (String bookUrl : this.urlTree.getBookUrls()) {
 
 			Book book = new Book();
-			book.setAuthor(extrator.etrAuthor(bookUrl));
-			book.setBrief(extrator.etrBrief(bookUrl));
-			book.setName(extrator.etrName(bookUrl));
+			book.setAuthor(extractor.etrAuthor(bookUrl));
+			book.setBrief(extractor.etrBrief(bookUrl));
+			book.setName(extractor.etrName(bookUrl));
 
 			// chapter
 			for (String chapterUrl : this.urlTree.getChapterUrls().get(bookUrl)) {
 
 				Chapter chapter = new Chapter();
 
-				chapter.setTitle(extrator.etrChapterName(chapterUrl));
+				chapter.setTitle(extractor.etrChapterName(chapterUrl));
 
 				// image
 				for (String imageUrl : this.urlTree.getImageUrls().get(chapterUrl)) {
 
 					String imageSavePath = book.getName() + "/" + chapter.getTitle() + "/";
-					String imageName = extrator.etrImageName(imageUrl);
+					String imageName = extractor.etrImageName(imageUrl);
 					imageName = book.getName() + "_" + chapter.getTitle() + "_" + imageName;
 					Image image = new Image();
 					image.setName(imageName);

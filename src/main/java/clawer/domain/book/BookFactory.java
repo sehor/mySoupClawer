@@ -2,8 +2,8 @@ package clawer.domain.book;
 
 import java.util.List;
 
-import clawer.extrator.InfoExtrator;
+import clawer.extractor.InfoExtractor;
 
 public interface BookFactory { 
-	 List<Book> booksFromWebsite(String websiteName,String statrUrl,InfoExtrator extrator);
+	 List<Book> booksFromWebsite(String websiteName,String statrUrl,InfoExtractor extractor);
 }
