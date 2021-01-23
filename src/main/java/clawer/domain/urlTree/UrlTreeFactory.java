@@ -4,5 +4,8 @@ import clawer.extractor.UrlExtractor;
 
 public interface UrlTreeFactory {
 
-	public UrlTree getUrlTree(UrlExtractor extractor);
+	public UrlTree build(UrlExtractor extractor);
+	public UrlTreeFactory setSiteName(String websiteName);
+	public UrlTreeFactory setEnterUrl(String entUrl);
+	
 }

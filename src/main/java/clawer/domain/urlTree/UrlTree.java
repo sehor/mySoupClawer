@@ -1,10 +1,14 @@
 package clawer.domain.urlTree;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.stereotype.Component;
 
+@Component
 @Document
 public class UrlTree {
 
@@ -14,11 +18,11 @@ public class UrlTree {
 
 	private String rootUrl;
 
-	private List<String> bookUrls;
+	private List<String> bookUrls=new ArrayList<>();
 
-	private Map<String, List<String>> chapterUrls;
+	private Map<String, List<String>> chapterUrls=new HashMap<>();
 
-	private Map<String, List<String>> imageUrls;
+	private Map<String, List<String>> imageUrls=new HashMap<>();
 
 	public void setId(String id) {
 		this.id = id;

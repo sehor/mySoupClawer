@@ -1,12 +1,20 @@
 package clawer.extractor;
 
+import java.time.LocalDate;
+
+import org.jsoup.nodes.Element;
+
 public interface InfoExtractor {
 
 	
 	 
-	 String etrName(String entyUrl);
-	 String etrAuthor(String entyUrl);
-	 String etrBrief(String entyUrl);
-	 String etrChapterName(String entyUrl);
-	 String etrImageName(String entyUrl);
+	 String etrName(Element infoNode);
+	 String etrAuthor(Element infoNode);
+	 String etrBrief(Element infoNode);
+	 String etrCoverImageUrl(Element infoNode);
+	 
+	 String etrChapterName(Element infoNode);
+ 
+	 String etrImageName(Element infoNode);
+	 LocalDate etrImagePublishDate(Element infoNode);
 }

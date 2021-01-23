@@ -10,18 +10,20 @@ import clawer.domain.other.Cover;
 public class Chapter {
 
 	private String id;
-	
+
 	private String bookName;
-	
+
 	private String bookId;
 
+	private String url;
 	private String title;
-	
+
+	private long orderNum;
+
 	private List<String> imageId;
-	
-    private Cover cover;
-	
-	
+
+	private Cover cover;
+
 	public List<String> getImageId() {
 		return imageId;
 	}
@@ -70,5 +72,20 @@ public class Chapter {
 		this.bookId = bookId;
 	}
 
-   	
+	public long getOrderNum() {
+		return orderNum;
+	}
+
+	public void setOrderNum(long orderNum) {
+		this.orderNum = orderNum;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
 }

@@ -12,6 +12,7 @@ public class Image {
 	private String chapterId;
 	private String bookName;
 	private LocalDate publishDate;
+	private String originUrl;
 	
 	private String name;  // save file name
 
@@ -75,6 +76,14 @@ public class Image {
 
 	public void setBookName(String bookName) {
 		this.bookName = bookName;
+	}
+
+	public String getOriginUrl() {
+		return originUrl;
+	}
+
+	public void setOriginUrl(String originUrl) {
+		this.originUrl = originUrl;
 	}
 	
 	

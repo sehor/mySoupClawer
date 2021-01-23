@@ -18,6 +18,8 @@ public class Book {
 	private String id;
 
 	private String name;
+	
+	private String url;
 
 	private String author;
 
@@ -124,6 +126,14 @@ public class Book {
 
 	public void setWebSiteName(String webSiteName) {
 		this.webSiteName = webSiteName;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
  
 	
