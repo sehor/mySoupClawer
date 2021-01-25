@@ -25,13 +25,15 @@ public class KanKanUrlExtractor implements UrlExtractor {
 				bookUrls.add(a.attr("abs:href"));
 			}
 		}
-		return bookUrls.subList(0, 3);
+		return bookUrls.subList(0, 1);
 	}
 
 	@Override
-	public List<String> getChapterUrls(String startUrl) {
-		Elements aTags = Helper.getBody(startUrl).select("div.contentBox > div > div.TopicList > div > div> div.title.fl > a");
+	public List<String> getChapterUrls(Element bookPage) {
+		Elements aTags = bookPage.select("div.contentBox > div > div.TopicList > div > div> div.title.fl > a");
+		
 		//System.out.println("atags "+aTags.toString());
+		
 		Elements aTags1 = new Elements();
 		
 		//去掉有 i 元素的（锁住的）
@@ -42,14 +44,14 @@ public class KanKanUrlExtractor implements UrlExtractor {
 			}
 		}
 		
-		return Helper.getEachHref(aTags1, rootUrl);
+		return Helper.getEachHref(aTags1, rootUrl).subList(0, 15);
 
 	}
 
 	@Override
-	public List<String> getChapterImageUrls(String startUrl) {
+	public List<String> getChapterImageUrls(Element chapterPage) {
 
-		Elements lis = Helper.getBodyBySelenium(startUrl)
+		Elements lis = chapterPage
 				.select("div.contentBox > div.comicDetails > div.imgList > img");
 
 		return lis.eachAttr("data-src");

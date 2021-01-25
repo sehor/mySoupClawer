@@ -8,6 +8,8 @@ import java.util.Map;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
+import clawer.exception.ClawerException;
+
 @Component
 @Document
 public class UrlTree {
@@ -23,7 +25,10 @@ public class UrlTree {
 	private Map<String, List<String>> chapterUrls=new HashMap<>();
 
 	private Map<String, List<String>> imageUrls=new HashMap<>();
+	
+	private List<ClawerException> exceptions=new ArrayList<>();
 
+	
 	public void setId(String id) {
 		this.id = id;
 	}
@@ -71,6 +76,15 @@ public class UrlTree {
 	public void setImageUrls(Map<String, List<String>> imageUrls) {
 		this.imageUrls = imageUrls;
 	}
+
+	public List<ClawerException> getExceptions() {
+		return exceptions;
+	}
+
+	public void setExceptions(List<ClawerException> exceptions) {
+		this.exceptions = exceptions;
+	}
+	
 	
 	
 

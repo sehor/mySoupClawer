@@ -14,6 +14,7 @@ public interface InfoExtractor {
 	 String etrCoverImageUrl(Element infoNode);
 	 
 	 String etrChapterName(Element infoNode);
+	 long etrChapterNum(Element infoNode);
  
 	 String etrImageName(Element infoNode);
 	 LocalDate etrImagePublishDate(Element infoNode);

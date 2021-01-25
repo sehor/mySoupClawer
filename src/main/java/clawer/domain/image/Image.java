@@ -8,11 +8,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class Image {
 
 	private String id;
+	private int imageNum;
 	private String chapterName;
 	private String chapterId;
 	private String bookName;
 	private LocalDate publishDate;
-	private String originUrl;
+	private String url;
 	
 	private String name;  // save file name
 
@@ -78,13 +79,25 @@ public class Image {
 		this.bookName = bookName;
 	}
 
-	public String getOriginUrl() {
-		return originUrl;
+
+
+	public int getImageNum() {
+		return imageNum;
 	}
 
-	public void setOriginUrl(String originUrl) {
-		this.originUrl = originUrl;
+	public void setImageNum(int imageNum) {
+		this.imageNum = imageNum;
 	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
+	}
+
+
 	
 	
 

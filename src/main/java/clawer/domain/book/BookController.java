@@ -11,6 +11,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import clawer.extractor.InfoExtractor;
+import clawer.extractor.UrlExtractor;
+import clawer.extractor.website.kankan.InfoExtractor_KanKan;
+import clawer.extractor.website.kankan.KanKanUrlExtractor;
+
 
 @RestController
 @RequestMapping("/book")
@@ -43,7 +48,13 @@ public class BookController {
 
 	@GetMapping("/getAll")
 	public List<Book> getAll(){
-	  return service.getAllBook();
+	  UrlExtractor urlExtractor=new KanKanUrlExtractor();
+	  InfoExtractor infoExtractor=new InfoExtractor_KanKan();
+	  
+	  BookFactory factory=new DefaultBookFactory();	
+	  List<Book> books=factory.booksFromWebsite("KanKan", "https://www.kuaikanmanhua.com/tag/0", infoExtractor, urlExtractor);
+		
+	  return books;
 	}
 }
 

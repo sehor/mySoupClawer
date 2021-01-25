@@ -1,7 +1,10 @@
 package clawer.domain.book;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -35,7 +38,9 @@ public class Book {
 	
 	private ContentPage contentPage;
 	
-	private List<String> chapterId;
+	private List<String> chapterIds=new ArrayList<>();
+	
+	private Map<String,String> chapterIdToUrl=new HashMap<>();
 	
 	
 	
@@ -72,13 +77,7 @@ public class Book {
 		this.contentPage = contentPage;
 	}
 
-	public List<String> getChapterId() {
-		return chapterId;
-	}
 
-	public void setChapterId(List<String> chapterId) {
-		this.chapterId = chapterId;
-	}
 
 	public void setId(String id) {
 		this.id = id;
@@ -135,6 +134,23 @@ public class Book {
 	public void setUrl(String url) {
 		this.url = url;
 	}
- 
-	
+
+	public Map<String, String> getChapterIdToUrl() {
+		return chapterIdToUrl;
+	}
+
+	public void setChapterIdToUrl(Map<String, String> chapterIdToUrl) {
+		this.chapterIdToUrl = chapterIdToUrl;
+	}
+
+	public List<String> getChapterIds() {
+		return chapterIds;
+	}
+
+	public void setChapterIds(List<String> chapterIds) {
+		this.chapterIds = chapterIds;
+	}
+
+  
+   	
 }

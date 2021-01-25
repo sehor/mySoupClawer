@@ -5,14 +5,12 @@ import java.util.List;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
-import org.jsoup.select.Elements;
-
 import clawer.extractor.InfoExtractor;
+import clawer.util.Helper;
+import clawer.util.Tools;
 
 public class InfoExtractor_KanKan implements InfoExtractor {
 
-	private final String webName = "KanKan";
-	private final String rootUrl = "https://www.kuaikanmanhua.com/tag/0";
 
 	@Override
 	public String etrName(Element infoNode) {
@@ -48,6 +46,13 @@ public class InfoExtractor_KanKan implements InfoExtractor {
 		String text=textNodes.get(textNodes.size()-1).text();
 		return text;
 	}
+	
+
+	@Override
+	public long etrChapterNum(Element infoNode) {
+		// TODO Auto-generated method stub
+		return Tools.extAndToNumber(etrChapterName(infoNode));
+	}
 
 	@Override
 	public String etrImageName(Element infoNode) {
@@ -61,11 +66,5 @@ public class InfoExtractor_KanKan implements InfoExtractor {
 		return LocalDate.of(2020, 1, 1);
 	}
 
-	private String extText(Element element, String extPath) {
-        String text=element.select(extPath).text();
-        if(text==null||text.isEmpty()) {
-        	return "无内容";
-        }
-		return text.trim();
-	}
+
 }

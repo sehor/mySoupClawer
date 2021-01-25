@@ -1,6 +1,11 @@
 package clawer.domain.chapter;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.print.attribute.HashAttributeSet;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,21 +21,17 @@ public class Chapter {
 	private String bookId;
 
 	private String url;
-	private String title;
+	private String name;
 
 	private long orderNum;
 
-	private List<String> imageId;
+	private List<String> imageIds=new ArrayList<>();
+	
+	private Map<String,String> imageIdToUrl=new HashMap<>();
 
 	private Cover cover;
 
-	public List<String> getImageId() {
-		return imageId;
-	}
 
-	public void setImageId(List<String> imageId) {
-		this.imageId = imageId;
-	}
 
 	public void setId(String id) {
 		this.id = id;
@@ -40,13 +41,6 @@ public class Chapter {
 		return id;
 	}
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getTitle() {
-		return title;
-	}
 
 	public Cover getCover() {
 		return cover;
@@ -88,4 +82,33 @@ public class Chapter {
 		this.url = url;
 	}
 
+ 
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+
+
+	public List<String> getImageIds() {
+		return imageIds;
+	}
+
+	public void setImageIds(List<String> imageIds) {
+		this.imageIds = imageIds;
+	}
+
+	public Map<String,String> getImageIdToUrl() {
+		return imageIdToUrl;
+	}
+
+	public void setImageIdToUrl(Map<String,String> imageIdToUrl) {
+		this.imageIdToUrl = imageIdToUrl;
+	}
+
+	 
 }

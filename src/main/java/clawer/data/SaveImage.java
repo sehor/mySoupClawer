@@ -12,24 +12,18 @@ import clawer.domain.image.Image;
 
 @Service
 public class SaveImage {
-	public void saveImageToFile(Image image,String imgUrl) {
-		// TODO Auto-generated method stub
-		final String baseDir = "E:/clawerImages/";
+	public void saveImageToFile(Image image) {
+	
 
-		String fileName = image.getName();
-		if (imgUrl == null) {
-			return;
-		}
-
-		File file = new File(baseDir + fileName);
+		File file = new File(image.getSavePath());
 
 		if (file.exists()) {
-			System.out.println(fileName + " already exists! ");
+			System.out.println(image.getName() + " already exists! ");
 			return;
 		}
 
 		try {
-			URL url = new URL(imgUrl);
+			URL url = new URL(image.getUrl());
 
 			// 如果网站图片用了referer防盗链，设置requestProperty
 			/*
@@ -45,7 +39,7 @@ public class SaveImage {
 			while ((length = input.read(buffer)) > 0) {
 				output.write(buffer, 0, length);
 			}
-			System.out.println("download " + fileName + " done!");
+			System.out.println("download " + image.getName() + " done!");
 			output.close();
 			input.close();
 

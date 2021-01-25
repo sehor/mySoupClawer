@@ -15,6 +15,7 @@ import clawer.domain.image.Image;
 import clawer.domain.image.ImageService;
 import clawer.domain.urlTree.UrlTree;
 import clawer.extractor.InfoExtractor;
+import clawer.extractor.UrlExtractor;
 import clawer.util.Helper;
 
 @Component
@@ -28,54 +29,95 @@ public class DefaultBookFactory implements BookFactory {
 	BookService bookService;
 	@Autowired
 	ChapterService chapterService;
-	private UrlTree urlTree;
-
-	public DefaultBookFactory(UrlTree urlTree) {
-		// TODO Auto-generated constructor stub
-		this.urlTree = urlTree;
-	}
 
 
+	
 	@Override
-	public List<Book> booksFromWebsite(String websiteName,String statrUrl,InfoExtractor extractor) {
-		// TODO Auto-generated method stub
+	public List<Book> booksFromWebsite(String websiteName, String startUrl, InfoExtractor infoExtractor,
+			UrlExtractor urlExtractor) {
+
+		List<String> bookUrls = urlExtractor.getBookUrls(startUrl);
 		List<Book> books = new ArrayList<>();
-		Helper helper=new Helper();
 
-		// book
-		for (String bookUrl : this.urlTree.getBookUrls()) {
-            Element bookInfoBody=helper.getBody(bookUrl);
+		// outcome books
+		for (String bookurl : bookUrls) {
+
 			Book book = new Book();
-			book.setAuthor(extractor.etrAuthor(bookInfoBody));
-			book.setBrief(extractor.etrBrief(bookInfoBody));
-			book.setName(extractor.etrName(bookInfoBody));
+			Element bookPage = Helper.getBody(bookurl);
+			List<String> chapterUrls = urlExtractor.getChapterUrls(bookPage);
 
-			// chapter
-			for (String chapterUrl : this.urlTree.getChapterUrls().get(bookUrl)) {
+			String bookName = infoExtractor.etrName(bookPage);
+			String bookId = websiteName + "_" + bookName;
+			String author=infoExtractor.etrAuthor(bookPage);
+			String brief=infoExtractor.etrBrief(bookPage);
+			
+			book.setWebSiteName(websiteName);
+			book.setUrl(startUrl);
+			book.setId(bookId);
+			book.setName(bookName);
+			book.setBrief(brief);
+			book.setAuthor(author);
+
+			System.out.println("book: "+book.getName());
+			// outcome chapters
+			for (String chapterUrl : chapterUrls) {
 
 				Chapter chapter = new Chapter();
-				Element chapterInfoBody=helper.getBody(chapterUrl);
-				chapter.setTitle(extractor.etrChapterName(chapterInfoBody));
+				Element chapterPage = Helper.getBodyBySelenium(chapterUrl);
+				List<String> imageUrls = urlExtractor.getChapterImageUrls(chapterPage);
 
-				// image
-				for (String imageUrl : this.urlTree.getImageUrls().get(chapterUrl)) {
+				String chapterTitle = infoExtractor.etrChapterName(chapterPage);
+				long chapterNum = infoExtractor.etrChapterNum(chapterPage);
+				String chapterId = book.getId() + "_" + chapterTitle;
 
-					String imageSavePath = book.getName() + "/" + chapter.getTitle() + "/";
-					String imageName = extractor.etrImageName(chapterInfoBody);
-					imageName = book.getName() + "_" + chapter.getTitle() + "_" + imageName;
+				chapter.setUrl(chapterUrl);
+				chapter.setOrderNum(chapterNum);
+				chapter.setBookId(book.getId());
+				chapter.setBookName(book.getName());
+				chapter.setId(chapterId);
+				chapter.setName(chapterTitle);
+
+				book.getChapterIds().add(chapter.getId());
+				book.getChapterIdToUrl().put(chapter.getId(), chapter.getUrl());
+				System.out.println("chapter: "+chapter.getName());
+				
+				// outcome images
+				int imageNum = 1;
+				for (String imageUrl : imageUrls) {
 					Image image = new Image();
-					image.setOriginUrl(imageUrl);
+					image.setImageNum(imageNum);
+					String imageName=String.valueOf(imageNum)+"_"+imageUrl.substring(imageUrl.length() - 6, imageUrl.length() - 1);
+					String imageId = chapterId + "_" + String.valueOf(imageNum) + "_"
+							+ imageUrl.substring(imageUrl.length() - 6, imageUrl.length() - 1);
+					String savePath = Helper.Base_Save_Path + "/" + websiteName + "/" + bookName + "/" + chapterTitle
+							+ "/" +imageName;
+					
+				
 					image.setName(imageName);
+                    image.setSavePath(savePath);
+					image.setId(imageId);
 					image.setBookName(book.getName());
-					image.setChapterName(chapter.getTitle());
-					image.setSavePath(imageSavePath);
-                    
+					image.setChapterId(chapter.getId());
+					image.setChapterName(chapter.getName());
+					image.setUrl(imageUrl);
+					imageNum++;
+
+					// helper.saveImage(image,savepath).then() =>;
+					chapter.getImageIds().add(imageId);
+					chapter.getImageIdToUrl().put(image.getId(), image.getUrl());
+
+					
 				}
+				
+
 			}
+
+			books.add(book);
 
 		}
 
-		return null;
+		return books;
 	}
+
 
 }
