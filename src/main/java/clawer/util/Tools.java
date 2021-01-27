@@ -9,7 +9,8 @@ import java.util.regex.Pattern;
 public class Tools {
 	public static long extAndToNumber(String input) {
 		input = input.replaceAll("[\\s+\\-_;]", "");
-		String regx = "第*([一二三四五六七八九零十百千万1-9]{1,10})[章节卷话]*"; // 把中文数字提取出来；
+		System.out.println(input);
+		String regx = ".*第([一二三四五六七八九零十百千万1-9]{1,10})[章节卷话].*"; // 把中文数字提取出来；
 		Pattern p = Pattern.compile(regx);
 		Matcher matcher = p.matcher(input);
 		String result = "未找到章节数";
@@ -66,4 +67,9 @@ public class Tools {
 
 		return result_num;
 	}
+	
+	public static String trimText(String text) {
+		return text.trim().replaceAll("[_\\-\\?？\\!！——]", "").replaceAll("\\s+", " ");
+	}
+
 }

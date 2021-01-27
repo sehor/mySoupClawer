@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import clawer.domain.other.BackCover;
@@ -17,7 +18,8 @@ import clawer.domain.other.Cover;
 public class Book {
 	
 	private String webSiteName;
-
+	
+    @Id
 	private String id;
 
 	private String name;
@@ -39,8 +41,8 @@ public class Book {
 	private ContentPage contentPage;
 	
 	private List<String> chapterIds=new ArrayList<>();
-	
-	private Map<String,String> chapterIdToUrl=new HashMap<>();
+	private List<String> notYetHandledChapterUrls=new ArrayList<>();
+
 	
 	
 	
@@ -135,13 +137,6 @@ public class Book {
 		this.url = url;
 	}
 
-	public Map<String, String> getChapterIdToUrl() {
-		return chapterIdToUrl;
-	}
-
-	public void setChapterIdToUrl(Map<String, String> chapterIdToUrl) {
-		this.chapterIdToUrl = chapterIdToUrl;
-	}
 
 	public List<String> getChapterIds() {
 		return chapterIds;
@@ -149,6 +144,14 @@ public class Book {
 
 	public void setChapterIds(List<String> chapterIds) {
 		this.chapterIds = chapterIds;
+	}
+
+	public List<String> getNotYetHandledChapterUrls() {
+		return notYetHandledChapterUrls;
+	}
+
+	public void setNotYetHandledChapterUrls(List<String> notYetHandledChapterUrls) {
+		this.notYetHandledChapterUrls = notYetHandledChapterUrls;
 	}
 
   

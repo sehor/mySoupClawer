@@ -10,7 +10,6 @@ import org.jsoup.nodes.Element;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
-import clawer.domain.urlTree.UrlTree;
 import clawer.extractor.UrlExtractor;
 import clawer.extractor.website.kankan.KanKanUrlExtractor;
 import clawer.util.Helper;
@@ -51,8 +50,6 @@ public class UrlTreeController {
 	@GetMapping("/getAll")
 	public List<UrlTree> getAll() {
 
-		factory.setEnterUrl("https://www.kuaikanmanhua.com/tag/0").setSiteName("kankan")
-				.build(new KanKanUrlExtractor());
 
 		return service.getAllUrlTree();
 

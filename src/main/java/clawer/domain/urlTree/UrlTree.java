@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
 
 import clawer.exception.ClawerException;
+import clawer.exception.ClawerExceptionType;
 
 @Component
 @Document
@@ -21,12 +22,17 @@ public class UrlTree {
 	private String rootUrl;
 
 	private List<String> bookUrls=new ArrayList<>();
+	private List<String> notYetHandledBookUrls=new ArrayList<>();
 
 	private Map<String, List<String>> chapterUrls=new HashMap<>();
 
 	private Map<String, List<String>> imageUrls=new HashMap<>();
 	
 	private List<ClawerException> exceptions=new ArrayList<>();
+	
+	private int lastBookIndx;
+	private long lastChapterIndx;
+	private int lastImageIndex;
 
 	
 	public void setId(String id) {
@@ -84,8 +90,41 @@ public class UrlTree {
 	public void setExceptions(List<ClawerException> exceptions) {
 		this.exceptions = exceptions;
 	}
-	
-	
-	
+
+	public int getLastBookIndx() {
+		return lastBookIndx;
+	}
+
+	public void setLastBookIndx(int lastBookIndx) {
+		this.lastBookIndx = lastBookIndx;
+	}
+
+
+
+	public int getLastImageIndex() {
+		return lastImageIndex;
+	}
+
+	public void setLastImageIndex(int lastImageIndex) {
+		this.lastImageIndex = lastImageIndex;
+	}
+
+	public long getLastChapterIndx() {
+		return lastChapterIndx;
+	}
+
+	public void setLastChapterIndx(long lastChapterIndx) {
+		this.lastChapterIndx = lastChapterIndx;
+	}
+
+	public List<String> getNotYetHandledBookUrls() {
+		return notYetHandledBookUrls;
+	}
+
+	public void setNotYetHandledBookUrls(List<String> notYetHandledBookUrls) {
+		this.notYetHandledBookUrls = notYetHandledBookUrls;
+	}
+
+
 
 }

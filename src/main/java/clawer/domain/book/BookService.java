@@ -16,5 +16,10 @@ public interface BookService {
 	void deleteBook(String id);
 
 	List<Book> getAllBook();
+	
+	int getBookLastIndex(String webSitName);
 
+	List<String> getBookUrlsByWebsite(String websiteName);
+	
+	Book findOneBookByUrl(String url);
 }

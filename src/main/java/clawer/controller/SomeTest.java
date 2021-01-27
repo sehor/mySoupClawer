@@ -1,5 +1,6 @@
 package clawer.controller;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -7,6 +8,11 @@ import javax.websocket.server.PathParam;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import clawer.domain.chapter.Chapter;
+import clawer.exception.ClawerException;
+import clawer.exception.ClawerExceptionFactory;
+import clawer.exception.ClawerExceptionType;
 
 @RestController
 @RequestMapping("/test")
@@ -22,6 +28,18 @@ public class SomeTest {
 	public String testExtNumberRegx(@PathParam("value=input") String input) {
 
 		return extAndToNumber(input);
+	}
+	
+	@RequestMapping("/enum")
+	public List<ClawerExceptionType> getEnum() {
+		
+		return List.of(ClawerExceptionType.BookName_No_Founded,ClawerExceptionType.BookUrls_No_Founded);
+	}
+		
+	@RequestMapping("/exception")
+	public List<ClawerException> getException() {
+		
+		return List.of(ClawerExceptionFactory.ChapterNameNoFound(new Chapter()));
 	}
 	
 	private String extAndToNumber(String input) {
@@ -48,4 +66,6 @@ public class SomeTest {
 
 		return ".不明图画格式";
 	}
+	
+	
 }

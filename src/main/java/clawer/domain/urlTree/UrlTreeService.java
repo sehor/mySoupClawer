@@ -15,6 +15,7 @@
 	void deleteUrlTree(String id);
 
 	List<UrlTree> getAllUrlTree();
+	UrlTree getByName(String name);
 
 }
 

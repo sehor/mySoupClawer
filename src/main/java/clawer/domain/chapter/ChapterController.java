@@ -2,12 +2,17 @@ package clawer.domain.chapter;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/chapter")
 public class ChapterController {
+	@Autowired
+	ChapterRepository repository;
+	
 	@Autowired
 	ChapterService service;
 
@@ -36,7 +41,9 @@ public class ChapterController {
 
 	@GetMapping("/getAll")
 	public List<Chapter> getAll(){
-	  return service.getAllChapter();
+
+		return service.getAllChapter();
+	  
 	}
 }
 

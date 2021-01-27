@@ -7,13 +7,14 @@ import java.util.Map;
 
 import javax.print.attribute.HashAttributeSet;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import clawer.domain.other.Cover;
 
 @Document
 public class Chapter {
-
+    @Id
 	private String id;
 
 	private String bookName;
@@ -26,9 +27,8 @@ public class Chapter {
 	private long orderNum;
 
 	private List<String> imageIds=new ArrayList<>();
+	private List<String> notYetHandledImageUrls=new ArrayList<>();
 	
-	private Map<String,String> imageIdToUrl=new HashMap<>();
-
 	private Cover cover;
 
 
@@ -102,12 +102,13 @@ public class Chapter {
 		this.imageIds = imageIds;
 	}
 
-	public Map<String,String> getImageIdToUrl() {
-		return imageIdToUrl;
+
+	public List<String> getNotYetHandledImageUrls() {
+		return notYetHandledImageUrls;
 	}
 
-	public void setImageIdToUrl(Map<String,String> imageIdToUrl) {
-		this.imageIdToUrl = imageIdToUrl;
+	public void setNotYetHandledImageUrls(List<String> notYetHandledImageUrls) {
+		this.notYetHandledImageUrls = notYetHandledImageUrls;
 	}
 
 	 

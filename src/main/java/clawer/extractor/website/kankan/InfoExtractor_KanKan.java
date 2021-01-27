@@ -15,14 +15,18 @@ public class InfoExtractor_KanKan implements InfoExtractor {
 	@Override
 	public String etrName(Element infoNode) {
 		// TODO Auto-generated method stub
-
-		return infoNode.select(" div.TopicHeader.cls > div.right.fl > h3").text();
+        String text=infoNode.select(" div.TopicHeader.cls > div.right.fl > h3").text();
+        text=Tools.trimText(text);
+		return text;
 	}
 
 	@Override
 	public String etrAuthor(Element infoNode) {
 		// TODO Auto-generated method stub
-		return infoNode.select("div.TopicHeader.cls > div.right.fl > div.nickname").text();
+        String text=infoNode.select("div.TopicHeader.cls > div.right.fl > div.nickname").text();
+        text=Tools.trimText(text);
+		return text;
+		
 	}
 
 	@Override
@@ -44,6 +48,7 @@ public class InfoExtractor_KanKan implements InfoExtractor {
 		// TODO Auto-generated method stub
 		List<TextNode> textNodes=infoNode.selectFirst("div.titleBox.cls > h3").textNodes();
 		String text=textNodes.get(textNodes.size()-1).text();
+		text=Tools.trimText(text);
 		return text;
 	}
 	

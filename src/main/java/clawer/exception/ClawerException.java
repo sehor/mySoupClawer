@@ -1,8 +1,5 @@
 package clawer.exception;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ClawerException extends Exception {
 
 	/**
@@ -11,10 +8,8 @@ public class ClawerException extends Exception {
 	private static final long serialVersionUID = 1L;
 
 	private String websiteName;
-	private int bookIndex;
-	private int chapterIndex;
-	private int imageIndex;
-	private List<String> errType = new ArrayList<>();
+    private String errorBeanId;
+	private ClawerExceptionType exceptionType;
 
 	public String getWebsiteName() {
 		return websiteName;
@@ -24,40 +19,26 @@ public class ClawerException extends Exception {
 		this.websiteName = websiteName;
 	}
 
-	public int getBookIndex() {
-		return bookIndex;
-	}
-
-	public void setBookIndex(int bookIndex) {
-		this.bookIndex = bookIndex;
-	}
-
-	public int getChapterIndex() {
-		return chapterIndex;
-	}
-
-	public void setChapterIndex(int chapterIndex) {
-		this.chapterIndex = chapterIndex;
-	}
-
-	public int getImageIndex() {
-		return imageIndex;
-	}
-
-	public void setImageIndex(int imageIndex) {
-		this.imageIndex = imageIndex;
-	}
-
-	public List<String> getErrType() {
-		return errType;
-	}
-
-	public void setErrType(List<String> errType) {
-		this.errType = errType;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
+
+	public ClawerExceptionType getExceptionType() {
+		return exceptionType;
+	}
+
+	public void setExceptionType(ClawerExceptionType exceptionType) {
+		this.exceptionType = exceptionType;
+	}
+
+	public String getErrorBeanId() {
+		return errorBeanId;
+	}
+
+	public void setErrorBeanId(String errorBeanId) {
+		this.errorBeanId = errorBeanId;
+	}
+	
+	
 
 }

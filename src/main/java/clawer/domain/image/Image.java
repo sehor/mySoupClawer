@@ -2,11 +2,12 @@ package clawer.domain.image;
 
 import java.time.LocalDate;
 
+import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
 public class Image {
-
+    @Id
 	private String id;
 	private int imageNum;
 	private String chapterName;
