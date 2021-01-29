@@ -74,7 +74,7 @@ public class BookController {
 	@GetMapping("/updateFromWebsite")
 	public List<Book> updatFromWebsite(@PathParam(value="websiteName") String websiteName,@PathParam(value = "url") String url){
 		BookFactory factory=new DefaultBookFactory();
-		List<Book> books=factory.booksFromWebsiteUpdate(websiteName, url, new InfoExtractor_KanKan(), new KanKanUrlExtractor());
+		List<Book> books=factory.booksFromWebsiteUpdate(websiteName, url, new InfoExtractor_KanKan(), new KanKanUrlExtractor(),true);
 		
 		return books;
 	}

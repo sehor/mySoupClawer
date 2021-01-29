@@ -3,7 +3,6 @@ package clawer.domain.urlTree;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 import javax.websocket.server.PathParam;
 
 import org.jsoup.nodes.Element;
@@ -58,7 +57,8 @@ public class UrlTreeController {
 	@GetMapping("/getBookUrls")
 	public List<String> getBookUrls() {
 		UrlExtractor urlExtractor = new KanKanUrlExtractor();
-		String startUrl = "https://www.kuaikanmanhua.com/tag/0?state=1&sort=1&page=";
+		String startUrl = "https://www.kuaikanmanhua.com/tag/0?state=1&sort=1&page=35";
+
 		List<String> urls = urlExtractor.getBookUrls(startUrl);
 		return urls;
 	}

@@ -17,17 +17,22 @@ public class KanKanUrlExtractor implements UrlExtractor {
 	@Override
 	public List<String> getBookUrls(String startUrl) {
 		List<String> bookUrls = new ArrayList<>();
-		int maxPage = 15;
+		int maxPage = 79;
 		for (int i = 1; i <= maxPage; i++) {
 			String nextUrl = "https://www.kuaikanmanhua.com/tag/0?state=1&sort=1&page=" + String.valueOf(i);
+            Elements divs=Helper.getBodyBySelenium(nextUrl).select("div.ItemSpecial");
+			
+			for (Element div : divs) {
+				String spanText=div.selectFirst("span.zanNumber.fr > span").text();
+				double hot=Double.valueOf(spanText.replaceAll("万|\\+", ""));
+				if(hot>=98) {
+					
+					Element a=div.selectFirst("a");
+					bookUrls.add(rootUrl+a.attr("href"));
+				}
 
-			Elements as = Helper.getBody(nextUrl).select("div.ItemSpecial").select("a");
-
-			for (Element a : as) {
-				bookUrls.add(a.attr("abs:href"));
 			}
 		}
-		
 		return bookUrls;
 	}
 
@@ -59,4 +64,5 @@ public class KanKanUrlExtractor implements UrlExtractor {
 
 	}
 
+	
 }

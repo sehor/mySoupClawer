@@ -22,14 +22,8 @@ public class UrlTree {
 	private String rootUrl;
 
 	private List<String> bookUrls=new ArrayList<>();
-	private List<String> notYetHandledBookUrls=new ArrayList<>();
+	private List<String> allBookUrls=new ArrayList<>();
 
-	private Map<String, List<String>> chapterUrls=new HashMap<>();
-
-	private Map<String, List<String>> imageUrls=new HashMap<>();
-	
-	private List<ClawerException> exceptions=new ArrayList<>();
-	
 	private int lastBookIndx;
 	private long lastChapterIndx;
 	private int lastImageIndex;
@@ -67,29 +61,6 @@ public class UrlTree {
 		this.bookUrls = bookUrls;
 	}
 
-	public Map<String, List<String>> getChapterUrls() {
-		return chapterUrls;
-	}
-
-	public void setChapterUrls(Map<String, List<String>> chapterUrls) {
-		this.chapterUrls = chapterUrls;
-	}
-
-	public Map<String, List<String>> getImageUrls() {
-		return imageUrls;
-	}
-
-	public void setImageUrls(Map<String, List<String>> imageUrls) {
-		this.imageUrls = imageUrls;
-	}
-
-	public List<ClawerException> getExceptions() {
-		return exceptions;
-	}
-
-	public void setExceptions(List<ClawerException> exceptions) {
-		this.exceptions = exceptions;
-	}
 
 	public int getLastBookIndx() {
 		return lastBookIndx;
@@ -117,14 +88,13 @@ public class UrlTree {
 		this.lastChapterIndx = lastChapterIndx;
 	}
 
-	public List<String> getNotYetHandledBookUrls() {
-		return notYetHandledBookUrls;
+	public List<String> getAllBookUrls() {
+		return allBookUrls;
 	}
 
-	public void setNotYetHandledBookUrls(List<String> notYetHandledBookUrls) {
-		this.notYetHandledBookUrls = notYetHandledBookUrls;
+	public void setAllBookUrls(List<String> allBookUrls) {
+		this.allBookUrls = allBookUrls;
 	}
-
 
 
 }

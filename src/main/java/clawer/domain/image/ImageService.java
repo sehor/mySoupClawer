@@ -2,10 +2,10 @@
     package clawer.domain.image;
        import java.util.List;
 
-import clawer.domain.image.Image;
+import clawer.domain.chapter.Chapter;
 	public interface ImageService {
 
-	Image addImage(Image image);
+	Image addImage(Image image,Chapter chapter);
 
 	Image getImage(String id);
 
@@ -16,6 +16,8 @@ import clawer.domain.image.Image;
 	void deleteImage(String id);
 
 	List<Image> getAllImage();
+	
+	void downloadAndSave(List<Image> images);
 
 }
 

@@ -27,6 +27,7 @@ import org.jsoup.select.Elements;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Action;
@@ -38,8 +39,8 @@ import org.springframework.stereotype.Service;
 
 public class Helper {
 
-	public static final String Base_Save_Path="D:/cartoon/images/origin/";
-	private final static int interval = 500;
+	public static final String Base_Save_Path="D:/cartoon/images/origin";
+	private final static int interval = 1000;
 	private final static int TIME_OUT = 5000;
 	private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64";
 	private static ChromeOptions options;
@@ -150,6 +151,7 @@ public class Helper {
 		chromeDriver.get(url);
 		interval();
 		String soruceStr = chromeDriver.getPageSource();
+		
 		Element body = Jsoup.parse(soruceStr).body();
 		//myChromeDriver.close();
 		return body;
@@ -157,6 +159,7 @@ public class Helper {
 
 	public static Element getBodyBySeleniumScroll(String url, int steps) {
 		WebDriver myChromeDriver = initWebDriver();
+		
 		myChromeDriver.get(url);
 		scrollWeb(myChromeDriver, steps);
 		String soruceStr = myChromeDriver.getPageSource();
@@ -193,7 +196,7 @@ public class Helper {
 	}
 
 	public static void scrollWeb(WebDriver driver, int steps) {
-		String jsScroll = "window.scrollTo({top: document.body.scrollHeight, behavior: \"smooth\"})";
+		//String jsScroll = "window.scrollTo({top: document.body.scrollHeight, behavior: \"smooth\"})";
 		JavascriptExecutor exDriver = (JavascriptExecutor) driver;
 		long height = (long) exDriver.executeScript("return document.body.scrollHeight");
 		int times = (int) (height / steps);

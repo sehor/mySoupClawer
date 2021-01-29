@@ -1,12 +1,7 @@
 package clawer.domain.chapter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
-import javax.print.attribute.HashAttributeSet;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -17,20 +12,15 @@ public class Chapter {
     @Id
 	private String id;
 
-	private String bookName;
-
-	private String bookId;
-
 	private String url;
 	private String name;
 
 	private long orderNum;
 
 	private List<String> imageIds=new ArrayList<>();
-	private List<String> notYetHandledImageUrls=new ArrayList<>();
+
 	
 	private Cover cover;
-
 
 
 	public void setId(String id) {
@@ -50,21 +40,7 @@ public class Chapter {
 		this.cover = cover;
 	}
 
-	public String getBookName() {
-		return bookName;
-	}
 
-	public void setBookName(String bookName) {
-		this.bookName = bookName;
-	}
-
-	public String getBookId() {
-		return bookId;
-	}
-
-	public void setBookId(String bookId) {
-		this.bookId = bookId;
-	}
 
 	public long getOrderNum() {
 		return orderNum;
@@ -103,13 +79,6 @@ public class Chapter {
 	}
 
 
-	public List<String> getNotYetHandledImageUrls() {
-		return notYetHandledImageUrls;
-	}
-
-	public void setNotYetHandledImageUrls(List<String> notYetHandledImageUrls) {
-		this.notYetHandledImageUrls = notYetHandledImageUrls;
-	}
 
 	 
 }

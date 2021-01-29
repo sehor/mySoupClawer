@@ -1,6 +1,6 @@
 package clawer.exception;
 
-public class ClawerException extends Exception {
+public class ClawerException {
 
 	/**
 	 * 

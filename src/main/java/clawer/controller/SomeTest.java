@@ -6,9 +6,11 @@ import java.util.regex.Pattern;
 
 import javax.websocket.server.PathParam;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import clawer.data.DataUtils;
 import clawer.domain.chapter.Chapter;
 import clawer.exception.ClawerException;
 import clawer.exception.ClawerExceptionFactory;
@@ -17,13 +19,9 @@ import clawer.exception.ClawerExceptionType;
 @RestController
 @RequestMapping("/test")
 public class SomeTest {
+    @Autowired
+    DataUtils dataUtils;
 
-	@RequestMapping("/text")
-	public String testRegx(@PathParam("value=input") String input) {
-
-		return extSuffix(input);
-	}
-	
 	@RequestMapping("/number")
 	public String testExtNumberRegx(@PathParam("value=input") String input) {
 
@@ -55,17 +53,10 @@ public class SomeTest {
 		 				 
 	}
 
-	private String extSuffix(String input) {
-		if (input.contains(".jpg") || input.contains(".JPG")) {
-			return ".jpg";
-		} else if (input.contains(".gif") || input.contains(".GIF")) {
-			return ".gif";
-		} else if (input.contains(".jpeg") || input.contains(".JPEG")) {
-			return ".jpeg";
-		}
-
-		return ".不明图画格式";
-	}
-	
-	
+ @RequestMapping("/warnDeleteDB")
+	  
+ public String deleteAll() {
+	  dataUtils.deleletAll();
+	  return "done";
+ }
 }

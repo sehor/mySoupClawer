@@ -1,7 +1,5 @@
 package clawer.domain.image;
 
-import java.time.LocalDate;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,35 +8,13 @@ public class Image {
     @Id
 	private String id;
 	private int imageNum;
-	private String chapterName;
-	private String chapterId;
-	private String bookName;
-	private LocalDate publishDate;
 	private String url;
 	
 	private String name;  // save file name
 
 	private String savePath; 
 	
-	
-	
-
-	public String getChapterId() {
-		return chapterId;
-	}
-
-	public void setChapterId(String chapterId) {
-		this.chapterId = chapterId;
-	}
-
-	public LocalDate getPublishDate() {
-		return publishDate;
-	}
-
-	public void setPublishDate(LocalDate publishDate) {
-		this.publishDate = publishDate;
-	}
-
+	private boolean isCompleted=false;
 
 	public void setId(String id) {
 		this.id = id;
@@ -64,23 +40,6 @@ public class Image {
 		return savePath;
 	}
 
-	public String getChapterName() {
-		return chapterName;
-	}
-
-	public void setChapterName(String chapterName) {
-		this.chapterName = chapterName;
-	}
-
-	public String getBookName() {
-		return bookName;
-	}
-
-	public void setBookName(String bookName) {
-		this.bookName = bookName;
-	}
-
-
 
 	public int getImageNum() {
 		return imageNum;
@@ -96,6 +55,14 @@ public class Image {
 
 	public void setUrl(String url) {
 		this.url = url;
+	}
+
+	public boolean isCompleted() {
+		return isCompleted;
+	}
+
+	public void setCompleted(boolean isCompleted) {
+		this.isCompleted = isCompleted;
 	}
 
 

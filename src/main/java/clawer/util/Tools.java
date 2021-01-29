@@ -69,6 +69,9 @@ public class Tools {
 	}
 	
 	public static String trimText(String text) {
+		if(text==null) {
+			return "";
+		}
 		return text.trim().replaceAll("[_\\-\\?？\\!！——]", "").replaceAll("\\s+", " ");
 	}
 

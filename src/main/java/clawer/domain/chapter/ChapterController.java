@@ -1,10 +1,15 @@
 package clawer.domain.chapter;
 
 import java.util.List;
+
+import javax.websocket.server.PathParam;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.web.bind.annotation.*;
+
+import clawer.domain.book.BookService;
 
 
 @RestController
@@ -15,11 +20,13 @@ public class ChapterController {
 	
 	@Autowired
 	ChapterService service;
+	@Autowired
+	BookService bookservice;
 
 	@PostMapping("/add")
-	public Chapter add(@RequestBody Chapter chapter) {
-
-		return service.addChapter(chapter);
+	public Chapter add(@RequestBody Chapter chapter,@PathParam(value = "bookId") String bookId) {
+       
+		return service.addChapter(chapter,bookservice.getBook(bookId));
 	}
 
 	@GetMapping("/get/{id}")

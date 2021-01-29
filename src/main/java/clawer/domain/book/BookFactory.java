@@ -9,6 +9,6 @@ import clawer.extractor.UrlExtractor;
 public interface BookFactory { 
 	
 	 List<Book>booksFromWebsiteUpdate(String websiteName, String startUrl, InfoExtractor infoExtractor,
-				UrlExtractor urlExtractor);
+				UrlExtractor urlExtractor,boolean updateUrlTree);
 	
 }

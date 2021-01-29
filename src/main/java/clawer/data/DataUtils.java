@@ -51,4 +51,11 @@ public class DataUtils {
 		
 		return list1.stream().filter(e->!list2.contains(e)).collect(Collectors.toList());
 	}
+	
+	public  void deleletAll() {
+		operations.dropCollection("book");
+		operations.dropCollection("chapter");
+		operations.dropCollection("image");
+		operations.dropCollection("urlTree");
+	}
 }

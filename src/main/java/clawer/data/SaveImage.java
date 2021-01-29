@@ -2,21 +2,31 @@ package clawer.data;
 
 import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.springframework.stereotype.Service;
 
 import clawer.domain.image.Image;
+import clawer.util.Helper;
 
 @Service
 public class SaveImage {
-	public void saveImageToFile(Image image) {
-	
+	public static void saveImageToFile(Image image) {
 
-		File file = new File(image.getSavePath());
+		String fullPath = Helper.Base_Save_Path + "/" + image.getSavePath();
+		String dirPath = fullPath.substring(0, fullPath.length() - image.getName().length());
 
+		// 建一个文件夹
+		File fold = new File(dirPath);
+		if (!fold.exists()) {
+			fold.mkdirs();
+		}
+
+		File file = new File(fullPath);
 		if (file.exists()) {
 			System.out.println(image.getName() + " already exists! ");
 			return;
@@ -40,12 +50,16 @@ public class SaveImage {
 				output.write(buffer, 0, length);
 			}
 			System.out.println("download " + image.getName() + " done!");
+
 			output.close();
 			input.close();
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			image.setCompleted(true);
+		} catch (MalformedURLException mex) {
+			mex.printStackTrace();
+			System.out.println("download image error!");
+		} catch (IOException ioe) {
+			ioe.printStackTrace();
+			System.out.println("download image error!");
 		}
 
 	}

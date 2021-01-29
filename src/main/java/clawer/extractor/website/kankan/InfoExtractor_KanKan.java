@@ -47,6 +47,9 @@ public class InfoExtractor_KanKan implements InfoExtractor {
 	public String etrChapterName(Element infoNode) {
 		// TODO Auto-generated method stub
 		List<TextNode> textNodes=infoNode.selectFirst("div.titleBox.cls > h3").textNodes();
+		if(textNodes==null||textNodes.isEmpty()) {
+			return "";
+		}
 		String text=textNodes.get(textNodes.size()-1).text();
 		text=Tools.trimText(text);
 		return text;
