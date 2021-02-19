@@ -22,4 +22,6 @@ public interface BookService {
 	List<String> getBookUrlsByWebsite(String websiteName);
 	
 	Book findOneBookByUrl(String url);
+	
+	boolean existInOtherWebSite(String bookName,String websiteName);
 }

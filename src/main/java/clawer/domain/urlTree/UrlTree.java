@@ -1,15 +1,10 @@
+
 package clawer.domain.urlTree;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.stereotype.Component;
-
-import clawer.exception.ClawerException;
-import clawer.exception.ClawerExceptionType;
 
 @Component
 @Document
@@ -23,6 +18,7 @@ public class UrlTree {
 
 	private List<String> bookUrls=new ArrayList<>();
 	private List<String> allBookUrls=new ArrayList<>();
+	private List<String> errors=new ArrayList<>();
 
 	private int lastBookIndx;
 	private long lastChapterIndx;
@@ -94,6 +90,14 @@ public class UrlTree {
 
 	public void setAllBookUrls(List<String> allBookUrls) {
 		this.allBookUrls = allBookUrls;
+	}
+
+	public List<String> getErrors() {
+		return errors;
+	}
+
+	public void setErrors(List<String> errors) {
+		this.errors = errors;
 	}
 
 

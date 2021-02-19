@@ -10,5 +10,6 @@ public interface BookRepository extends MongoRepository<Book, String>, BookDataH
 
 	List<Book> findByWebSiteName(String webSiteName);
 	List<Book> findByUrl(String url);
+	List<Book> findByName(String name);
 }
 

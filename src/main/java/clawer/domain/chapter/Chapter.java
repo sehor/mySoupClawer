@@ -19,7 +19,6 @@ public class Chapter {
 
 	private List<String> imageIds=new ArrayList<>();
 
-	
 	private Cover cover;
 
 
@@ -77,8 +76,5 @@ public class Chapter {
 	public void setImageIds(List<String> imageIds) {
 		this.imageIds = imageIds;
 	}
-
-
-
 	 
 }

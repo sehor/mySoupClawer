@@ -78,5 +78,17 @@ public class BookServiceImpl implements BookService {
 		return books.get(0);
 	}
 
+	@Override
+	public boolean existInOtherWebSite(String bookName,String websiteName) {
+		// TODO Auto-generated method stub
+		List<Book> books=repository.findByName(bookName);
+		for(Book book:books) {
+			if(!book.getWebSiteName().equals(websiteName)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
 

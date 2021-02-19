@@ -1,13 +1,9 @@
 package clawer.domain.book;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.websocket.server.PathParam;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.geo.Shape;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import clawer.data.DataUtils;
 import clawer.domain.chapter.Chapter;
+import clawer.extractor.FengZhiDongMan.FengZhiDongManExtractor;
 import clawer.extractor.website.kankan.InfoExtractor_KanKan;
 import clawer.extractor.website.kankan.KanKanUrlExtractor;
 
@@ -74,7 +71,15 @@ public class BookController {
 	@GetMapping("/updateFromWebsite")
 	public List<Book> updatFromWebsite(@PathParam(value="websiteName") String websiteName,@PathParam(value = "url") String url){
 		BookFactory factory=new DefaultBookFactory();
-		List<Book> books=factory.booksFromWebsiteUpdate(websiteName, url, new InfoExtractor_KanKan(), new KanKanUrlExtractor(),true);
+		List<Book> books=factory.booksFromWebsiteUpdate(websiteName, url, new InfoExtractor_KanKan(), new KanKanUrlExtractor(),false);
+		
+		return books;
+	}
+	
+	@GetMapping("/updateFromWebsite2")
+	public List<Book> updatFromWebsite2(){
+		DefaultBookFactory2 factory=new DefaultBookFactory2();
+		List<Book> books=factory.setIsUpdateUrlTree(true).setExtractor(new FengZhiDongManExtractor()).buildBooks();
 		
 		return books;
 	}

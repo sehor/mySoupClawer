@@ -26,6 +26,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -39,42 +40,46 @@ import org.springframework.stereotype.Service;
 
 public class Helper {
 
-	public static final String Base_Save_Path="D:/cartoon/images/origin";
+	public static final String Base_Save_Path = "D:/cartoon/images/origin";
 	private final static int interval = 1000;
-	private final static int TIME_OUT = 5000;
+	private final static int TIME_OUT = 20000;
 	private final static String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64";
-	private static ChromeOptions options;
-	private static WebDriver chromeDriver;
+	public static ChromeOptions options;
+	public static WebDriver chromeDriver;
 
 	static {
+		System.out.println("start init driver:..........");
 		System.setProperty("webdriver.chrome.driver", "E:\\chromeDriver\\chromedriver.exe");
-         options=new ChromeOptions();
-         
-         //新版Chromedriver设置去除浏览器上的爬虫信息
-         options.setExperimentalOption("excludeSwitches", new String[]{"enable-automation"});
-        
-        Map<String, Object> prefs = new HashMap<String, Object>();
-        prefs.put("profile.default_content_settings.javascript", 2); // 2就是代表禁止加载的意思
-         // 禁止加载css
-        prefs.put("profile.default_content_settings.images", 2); // 2就是代表禁止加载的意思
-        options.setExperimentalOption("prefs", prefs);
-        
-        options.addArguments("disable-infobars"); //禁止提示
-        options.addArguments("--headless"); //禁止打开窗口
-        options.addArguments("disable-popup-blocking");// 禁止弹窗
-        options.addArguments("disable-extensions");//禁止插件
-        options.addArguments("--start-maximized");//窗口最大化
-        
-  
-       // options.addArguments("disable-application-cache"); // to disable cache
-        options.addArguments("safebrowsing-disable-download-protection");
-        options.addArguments("ignore-certificate-errors");
-        options.addArguments("disable-gpu");
-        options.addArguments("incognito");
-        
-        chromeDriver=new ChromeDriver(options);
-        chromeDriver.manage().timeouts();
-      
+		options = new ChromeOptions();
+
+		// 新版Chromedriver设置去除浏览器上的爬虫信息
+		options.setExperimentalOption("excludeSwitches", new String[] { "enable-automation" });
+
+		Map<String, Object> prefs = new HashMap<String, Object>();
+		prefs.put("profile.default_content_settings.javascript", 2); // 2就是代表禁止加载的意思
+		// 禁止加载css
+		prefs.put("profile.default_content_settings.images", 2); // 2就是代表禁止加载的意思
+		options.setExperimentalOption("prefs", prefs);
+
+		options.addArguments("disable-infobars"); // 禁止提示
+		options.addArguments("--headless"); // 禁止打开窗口
+		options.addArguments("disable-popup-blocking");// 禁止弹窗
+		options.addArguments("disable-extensions");// 禁止插件
+		options.addArguments("--start-maximized");// 窗口最大化
+
+		options.addArguments("disable-application-cache"); // to disable cache
+		options.addArguments("safebrowsing-disable-download-protection");
+		options.addArguments("ignore-certificate-errors");
+		options.addArguments("disable-gpu");
+		options.addArguments("incognito");
+
+		// options.setPageLoadStrategy(PageLoadStrategy.NONE); 这种策略和用jsoup差不多的效果
+
+		chromeDriver = new ChromeDriver(options);
+		chromeDriver.manage().timeouts();
+
+		System.out.println("end init driver");
+
 	}
 
 	public static WebDriver initWebDriver() {
@@ -84,19 +89,27 @@ public class Helper {
 
 	public static Document getDoc(String url) {
 		interval();
-		Connection conn = Jsoup.connect(url).userAgent(USER_AGENT).timeout(TIME_OUT).maxBodySize(0);
+		int k = 1;
+		Document document = null;
+		Connection conn = null;
+		boolean flag = true;
+		while (flag && k <= 5) {
+			try {
+				conn = Jsoup.connect(url).userAgent(USER_AGENT).timeout(TIME_OUT);
+				document = conn.get();
+				flag = false;
+			} catch (UnknownHostException netErr) {
+				System.out.println("网址错误！");
+				return null;
 
-		try {
-			return conn.get();
-		} catch (UnknownHostException netErr) {
-			System.out.println("网址错误！");
-			return null;
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				flag = true; // 重试
+				k++;
+			}
 		}
-
+		return document;
 	}
 
 	public static String getByHttp(String url) {
@@ -147,25 +160,27 @@ public class Helper {
 	}
 
 	public static Element getBodyBySelenium(String url) {
-		//WebDriver myChromeDriver = initWebDriver();
+		// System.out.println("start get form web:");
+		// WebDriver myChromeDriver = initWebDriver();
 		chromeDriver.get(url);
 		interval();
 		String soruceStr = chromeDriver.getPageSource();
-		
+		// System.out.println("end get form web");
 		Element body = Jsoup.parse(soruceStr).body();
-		//myChromeDriver.close();
+		// System.out.println("end Jsoup parese ");
+		// chromeDriver.close();
 		return body;
 	}
 
 	public static Element getBodyBySeleniumScroll(String url, int steps) {
 		WebDriver myChromeDriver = initWebDriver();
-		
+
 		myChromeDriver.get(url);
 		scrollWeb(myChromeDriver, steps);
 		String soruceStr = myChromeDriver.getPageSource();
 		Element body = Jsoup.parse(soruceStr).body();
-		//myChromeDriver.close();
-		//System.out.println("driver close!");
+		// myChromeDriver.close();
+		// System.out.println("driver close!");
 		return body;
 	}
 
@@ -196,7 +211,8 @@ public class Helper {
 	}
 
 	public static void scrollWeb(WebDriver driver, int steps) {
-		//String jsScroll = "window.scrollTo({top: document.body.scrollHeight, behavior: \"smooth\"})";
+		// String jsScroll = "window.scrollTo({top: document.body.scrollHeight,
+		// behavior: \"smooth\"})";
 		JavascriptExecutor exDriver = (JavascriptExecutor) driver;
 		long height = (long) exDriver.executeScript("return document.body.scrollHeight");
 		int times = (int) (height / steps);
@@ -208,6 +224,16 @@ public class Helper {
 
 	}
 
-	
+	public static Element getBody(String url, String toolType) {
+		if (toolType == null || toolType.contains("jsoup")) {
+			return getBody(url);
+		} else if (toolType.contains("selenium")) {
+			return getBodyBySelenium(url);
+		} else if (toolType.contains("selenium_scroll")) {
+			return getBodyBySeleniumScroll(url, 50);
+		}
 
+		return null;
+
+	}
 }

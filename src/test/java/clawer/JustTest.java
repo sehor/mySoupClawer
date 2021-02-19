@@ -27,6 +27,7 @@ public class JustTest {
 	
 	@Test
 	public void test() {
+		 System.out.println(Helper.getBody("https://manhua.fzdm.com/2/1002/index_111.html"));
 		 System.out.println(Tools.trimText(" 第1话_-—— 重遇初恋！？"));
 	}
 	 

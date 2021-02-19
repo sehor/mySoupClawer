@@ -11,26 +11,21 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 import clawer.data.DataUtils;
-import clawer.data.SaveImage;
 import clawer.domain.chapter.Chapter;
 import clawer.domain.chapter.ChapterService;
 import clawer.domain.image.Image;
 import clawer.domain.image.ImageService;
 import clawer.domain.urlTree.UrlTree;
 import clawer.domain.urlTree.UrlTreeService;
-import clawer.extractor.InfoExtractor;
-import clawer.extractor.UrlExtractor;
+import clawer.extractor.Extractor;
 import clawer.util.Helper;
 
 @Component
 @Qualifier("defaultBookFactory")
-public class DefaultBookFactory implements BookFactory {
+public class DefaultBookFactory2 {
 
 	@Autowired
 	ImageService imageService;
-
-	@Autowired
-	SaveImage saveImage;
 
 	@Autowired
 	BookService bookService;
@@ -44,38 +39,38 @@ public class DefaultBookFactory implements BookFactory {
 	@Autowired
 	DataUtils dataUtils;
 
-	public static DefaultBookFactory defaultBookFactory;
-
+	private UrlTree urlTree;
+	private Extractor extractor;
+	private boolean isUpdateUrlTree=true;
+	
 	private List<String> errors = new ArrayList<>();
 	private final int maxError = 5;
+
+	public static DefaultBookFactory2 defaultBookFactory;
 
 	@PostConstruct
 	public void init() {
 		defaultBookFactory = this;
 		defaultBookFactory.imageService = this.imageService;
-		defaultBookFactory.saveImage = this.saveImage;
 		defaultBookFactory.bookService = this.bookService;
 		defaultBookFactory.chapterService = this.chapterService;
 		defaultBookFactory.urlTreeService = this.urlTreeService;
 		defaultBookFactory.dataUtils = this.dataUtils;
 	}
 
-	@Override
-	public List<Book> booksFromWebsiteUpdate(String websiteName, String startUrl, InfoExtractor infoExtractor,
-			UrlExtractor urlExtractor, boolean updateUrlTree) {
+	public DefaultBookFactory2() {
+		initUrlTree();
+	}
+	
+	public List<Book> buildBooks() {
 
-		UrlTree urlTree = defaultBookFactory.urlTreeService.getByName(websiteName);
-		if (updateUrlTree) {
-			updateUrlTreeBookUrlsFromWebsite(urlTree, startUrl, urlExtractor);
+		if (isUpdateUrlTree) {
+			updateUrlTreeBookUrlsFromWebsite();
 		}
-
 		// 未处理的book urls
 		List<String> notYetHandledBookUrls = DataUtils.differStringList(urlTree.getAllBookUrls(),
 				urlTree.getBookUrls());
 
-		if (updateUrlTree) {
-			return null;
-		}
 		List<Book> books = new ArrayList<>();
 		// outcome books
 		for (String bookurl : notYetHandledBookUrls) {
@@ -89,28 +84,32 @@ public class DefaultBookFactory implements BookFactory {
 			if (books.size() >= 50) {
 				System.out.println("already handled 50 books,break!");
 			}
-			
-			
-			
-			
-			Element bookPage = Helper.getBody(bookurl);
 
-			Book book = defaultBookFactory.bookService.findOneBookByUrl(bookurl);
-
-			List<String> chapterUrls = urlExtractor.getChapterUrls(bookPage);
+			
+			Element bookPage = Helper.getBody(bookurl,this.extractor.bookPageToolType());
+			List<String> chapterUrls = this.extractor.getChapterUrls(bookPage);
+			
 			// 未找到chapter urls
 			if (chapterUrls.isEmpty()) {
 				this.errors.add(bookurl + ": " + " noChapterurlFounded!");
 				continue;
 			}
-			String bookeName = infoExtractor.etrName(bookPage);
-			if (bookeName.isBlank()) {
+			String bookName = this.extractor.etrBookName(bookPage);
+			if (bookName.isBlank()) {
 				this.errors.add(bookurl + ": notFoundedBookName");
 				continue;
 			}
-			book.setName(bookeName);
-			setBook(book, bookPage, infoExtractor, websiteName, bookurl);
+            if(defaultBookFactory.bookService.existInOtherWebSite(bookName, this.extractor.weibsiteName())) {
+            	System.out.println("already exist at other website");
+            	continue;
+            }
+			//新建或从数据库获取一个book
+			Book book = defaultBookFactory.bookService.findOneBookByUrl(bookurl);
+			book.setName(bookName);
+			setBook(book, bookPage, this.extractor.weibsiteName(), bookurl);
 			defaultBookFactory.bookService.updateBook(book);
+			
+			//确定未处理的chapters
 			List<String> chaptersUlsFromDB = defaultBookFactory.dataUtils.getFielsFromDB("url",
 					Criteria.where("id").in(book.getChapterIds()), Chapter.class);
 			List<String> notYetHandledChapteUrls = DataUtils.differStringList(chapterUrls, chaptersUlsFromDB);
@@ -118,15 +117,14 @@ public class DefaultBookFactory implements BookFactory {
 			// outcome chapters
 			long chapterIndex = chaptersUlsFromDB == null ? 0 : chaptersUlsFromDB.size(); // 已完成的chapter最大值
 			for (String chapterUrl : notYetHandledChapteUrls) {
-
 				Chapter chapter = new Chapter();
-				Element chapterPage = Helper.getBodyBySelenium(chapterUrl);
-				List<String> imageUrls = urlExtractor.getChapterImageUrls(chapterPage);
+				Element chapterPage = Helper.getBody(chapterUrl,this.extractor.chapterPageToolType());
+				List<String> imageUrls = this.extractor.getChapterImageUrls(chapterPage);
 				if (imageUrls.isEmpty()) {
 					this.errors.add(chapterUrl + ": notFoundedImageurl");
 					continue;
 				}
-				String chapterName = infoExtractor.etrChapterName(chapterPage);
+				String chapterName = this.extractor.etrChapterName(chapterPage);
 				if (chapterName.isBlank()) {
 					this.errors.add(chapterUrl + ": notFoundedChapterName");
 					continue;
@@ -139,7 +137,7 @@ public class DefaultBookFactory implements BookFactory {
 				int imageIndex = 0;
 				for (String imageUrl : imageUrls) {
 					Image image = new Image();
-					setImage(book, chapter, image, chapterPage, infoExtractor, imageUrl, imageIndex, websiteName);
+					setImage(book, chapter, image, chapterPage, imageUrl, imageIndex, this.extractor.weibsiteName());
 					defaultBookFactory.imageService.addImage(image, chapter);
 					imageIndex++;
 				}
@@ -155,16 +153,16 @@ public class DefaultBookFactory implements BookFactory {
 			urlTree.getBookUrls().add(bookurl);
 			defaultBookFactory.urlTreeService.addUrlTree(urlTree);
 
-
 		}
-
+		urlTree.getErrors().addAll(this.errors);
+		defaultBookFactory.urlTreeService.addUrlTree(urlTree);
 		return books;
 	}
 
-	private void setBook(Book book, Element bookPage, InfoExtractor infoExtractor, String websiteName, String bookurl) {
+	private void setBook(Book book, Element bookPage, String websiteName, String bookurl) {
 
-		String author = infoExtractor.etrAuthor(bookPage);
-		String brief = infoExtractor.etrBrief(bookPage);
+		String author = this.extractor.etrAuthor(bookPage);
+		String brief = this.extractor.etrBrief(bookPage);
 
 		book.setWebSiteName(websiteName);
 		book.setUrl(bookurl);
@@ -177,8 +175,8 @@ public class DefaultBookFactory implements BookFactory {
 		chapter.setUrl(chapterUrl);
 	}
 
-	private void setImage(Book book, Chapter chapter, Image image, Element chapterPage, InfoExtractor infoExtractor,
-			String imageUrl, int imageIndex, String websiteName) {
+	private void setImage(Book book, Chapter chapter, Image image, Element chapterPage, String imageUrl, int imageIndex,
+			String websiteName) {
 		String imageName = String.valueOf(imageIndex) + extSuffix(imageUrl);
 		image.setSavePath(generateSavePath(websiteName, book.getName(), chapter.getName(), imageName));
 		image.setImageNum(imageIndex);
@@ -205,10 +203,28 @@ public class DefaultBookFactory implements BookFactory {
 
 	}
 
-	private void updateUrlTreeBookUrlsFromWebsite(UrlTree urlTree, String url, UrlExtractor urlExtractor) {
-		List<String> bookUrls = urlExtractor.getBookUrls(url);
-		urlTree.setAllBookUrls(bookUrls);
+	private void updateUrlTreeBookUrlsFromWebsite() {
+		List<String> bookUrls = this.extractor.getBookUrls(this.extractor.startUrl());
+		this.urlTree.getAllBookUrls().clear();
+		this.urlTree.getAllBookUrls().addAll(bookUrls);
 		defaultBookFactory.urlTreeService.addUrlTree(urlTree);
 	}
 
+
+	public DefaultBookFactory2 setExtractor(Extractor extractor) {
+		this.extractor = extractor;
+		return this;
+	}
+
+	public DefaultBookFactory2 setIsUpdateUrlTree(boolean isUpdateUrlTree) {
+		this.isUpdateUrlTree = isUpdateUrlTree;
+		return this;
+	}
+
+	private DefaultBookFactory2 initUrlTree() {
+		this.urlTree = defaultBookFactory.urlTreeService.getByName(this.extractor.weibsiteName());
+		return this;
+	}
+
+	
 }

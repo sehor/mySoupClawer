@@ -9,7 +9,7 @@ public class Image {
 	private String id;
 	private int imageNum;
 	private String url;
-	
+
 	private String name;  // save file name
 
 	private String savePath; 
@@ -64,6 +64,7 @@ public class Image {
 	public void setCompleted(boolean isCompleted) {
 		this.isCompleted = isCompleted;
 	}
+
 
 
 	
