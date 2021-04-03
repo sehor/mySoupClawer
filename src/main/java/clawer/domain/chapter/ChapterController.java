@@ -9,6 +9,7 @@ import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.web.bind.annotation.*;
 
+import clawer.data.PageModel;
 import clawer.domain.book.BookService;
 
 
@@ -46,11 +47,17 @@ public class ChapterController {
 		return "delete Chapter by id :" + id;
 	}
 
-	@GetMapping("/getAll")
-	public List<Chapter> getAll(){
+	@GetMapping("/getAll/page")
+	public PageModel<Chapter> getAll(@PathParam(value = "bookId")String bookId,@PathParam(value = "pageIndex") int pageIndex,@PathParam(value = "pageSize") int pageSize){
 
-		return service.getAllChapter();
+		
+		return service.getChaptersInPage(bookId,pageIndex, pageSize);
 	  
 	}
+	
+	
+	
+	
+	
 }
 

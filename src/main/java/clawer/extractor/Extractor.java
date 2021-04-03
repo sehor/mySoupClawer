@@ -5,6 +5,8 @@ import java.util.List;
 
 import org.jsoup.nodes.Element;
 
+import clawer.util.BookType;
+
 public interface Extractor {
 	String bookListPageToolType();
 	String bookPageToolType();
@@ -35,4 +37,7 @@ public interface Extractor {
 	public List<String> getChapterUrls(Element bookPage);
 
 	public List<String> getChapterImageUrls(Element chapterPage);
+	
+	BookType bookType();
+	
 }

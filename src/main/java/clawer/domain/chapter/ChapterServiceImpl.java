@@ -2,13 +2,15 @@ package clawer.domain.chapter;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.ExampleMatcher;
+import org.springframework.data.mongodb.core.MongoOperations;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.CriteriaDefinition;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import clawer.data.PageModel;
 import clawer.domain.book.Book;
 import clawer.domain.book.BookService;
-import clawer.domain.chapter.Chapter;
 
 @Service
 public class ChapterServiceImpl implements ChapterService {
@@ -17,6 +19,9 @@ public class ChapterServiceImpl implements ChapterService {
     @Autowired
     BookService bookService;
 
+    @Autowired
+     MongoOperations operations;
+    
 	@Override
 	public Chapter getChapter(String id) {
 		return repository.findById(id).get();
@@ -39,8 +44,10 @@ public class ChapterServiceImpl implements ChapterService {
 
 	@Override
 	public List<Chapter> getAllChapter(){
-
-	   return repository.findAll();
+       Query query=new Query();
+       query.limit(50);
+       List<Chapter> chapters=operations.find(query, Chapter.class);
+	   return chapters;
 	}
 
 	@Override
@@ -50,6 +57,26 @@ public class ChapterServiceImpl implements ChapterService {
 		book.getChapterIds().add(saved.getId());
 		bookService.updateBook(book);
 		return saved;
+	}
+
+	@Override
+	public PageModel<Chapter> getChaptersInPage(String bookId,int pageIndex, int pageSize) {
+		// TODO Auto-generated method stub
+     Book book=bookService.getBook(bookId);
+     List<String> chapterIds=book.getChapterIds();
+	 PageModel<Chapter> page=new PageModel<>();
+	 page.setPageIndex(pageIndex);
+	 page.setPageSize(pageSize);
+	 
+	  Query query=new Query();
+	  query.addCriteria(Criteria.where("id").in(chapterIds));
+	  long count=operations.count(query, Chapter.class);
+	  page.setTotal(count);
+	  query.skip(page.getSkip()).limit(pageSize);
+	  List<Chapter> chapters=operations.find(query, Chapter.class);
+	  page.getData().addAll(chapters);
+	  
+		return page;
 	}
 
 }

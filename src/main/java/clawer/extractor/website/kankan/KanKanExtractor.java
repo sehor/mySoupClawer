@@ -10,6 +10,7 @@ import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
 
 import clawer.extractor.Extractor;
+import clawer.util.BookType;
 import clawer.util.Helper;
 import clawer.util.Tools;
 
@@ -168,7 +169,11 @@ public class KanKanExtractor implements Extractor {
 	}
 
 
-
+	@Override
+	public BookType bookType() {
+		// TODO Auto-generated method stub
+		return BookType.Cartoon;
+	}
 
 
 }

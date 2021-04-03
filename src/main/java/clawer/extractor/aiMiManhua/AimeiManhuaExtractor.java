@@ -1,4 +1,4 @@
-package clawer.extractor.FengZhiDongMan;
+package clawer.extractor.aiMiManhua;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -10,34 +10,46 @@ import java.util.regex.Pattern;
 import org.jsoup.nodes.Element;
 import org.jsoup.nodes.TextNode;
 import org.jsoup.select.Elements;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+
+import com.sun.source.tree.LambdaExpressionTree.BodyKind;
 
 import clawer.extractor.Extractor;
 import clawer.util.BookType;
 import clawer.util.Helper;
 import clawer.util.Tools;
 
-public class FengZhiDongManExtractor implements Extractor {
+public class AimeiManhuaExtractor implements Extractor {
 
-	private final String rootUrl = "https://manhua.fzdm.com/";
+	private final String rootUrl = "https://www.aimimh.com/";
 
 	@Override
 	public List<String> getBookUrls(String startUrl) {
 		List<String> bookUrls = new ArrayList<>();
-		Elements as = Helper.getBody(startUrl).select("#mhmain > ul > div> li:nth-child(1) > a");
-		bookUrls = Helper.getEachHref(as, this.rootUrl());
+		Elements as = Helper.getBody(this.startUrl())
+				.select("div.mh-search-result > ul > li> div.mh-worksbox > div > div > a");
+		for (Element a : as) {
+			bookUrls.add(a.attr("abs:href"));
+		}
 		return bookUrls;
 	}
 
 	@Override
 	public List<String> getChapterUrls(Element bookPage) {
 
-		Elements aTags = bookPage.select("#content > li > a");
+		Elements aTags = bookPage.select("#mh-chapter-list-ol-0 > li> a");
 
 		List<String> urls = new ArrayList<>();
 		for (Element e : aTags) {
-			urls.add(e.attr("abs:href"));
+			urls.add(this.rootUrl+e.attr("href"));
 		}
 		Collections.reverse(urls);
+
+//		List<WebElement> aTags=Helper.chromeDriver.findElements(By.cssSelector("#mh-chapter-list-ol-0 > li > a"));
+//		for(WebElement e:aTags) {
+//			urls.add(e.getAttribute("href"));
+//		}
 		return urls;
 
 	}
@@ -45,41 +57,32 @@ public class FengZhiDongManExtractor implements Extractor {
 	@Override
 	public List<String> getChapterImageUrls(Element chapterPage) {
 		List<String> imageUrls = new ArrayList<>();
+		Element image = chapterPage.selectFirst("#qTcms_Pic_middle > tbody > tr > td > img");
+		String imageUrl = image.attr("src");
+		String baseImageUrl = imageUrl.substring(0, imageUrl.length() - "0001.jpg".length());
 
-		// System.out.println(chapterPage.toString());
+		Element span = chapterPage.selectFirst("#k_total");
+		int max = Integer.valueOf(span.text().replaceAll("\"", ""));
 
-		Element nextPage = chapterPage;
-
- 
-		while (true) {
-			Elements script = nextPage.select("script[type=text/javascript]");
-			String str = extImageUrl(script.toString());
-			imageUrls.add(str);
-			Element a_NextPage = nextPage.select("a.pure-button-primary").last();
-			//System.out.println(str);
-
-			if (a_NextPage.text().trim().equals("下一话吧")) {
-				System.out.println("no, 最后一页了！");
-				break;
-			}
-			String nextUrl = a_NextPage.attr("abs:href");
-
-			try {
-
-				nextPage = Helper.getBody(nextUrl);
-
-				if (nextPage == null) {
-					break;
-				}
-
-			} catch (Exception e) {
-				e.printStackTrace();
-				System.out.println("error occurr");
-				break;
-			}
-
-			
+		for (int i = 1; i <= max; i++) {
+			String numStr = String.valueOf(i);
+			String replace = "0000".substring(0, 4 - numStr.length()) + numStr;
+			imageUrls.add(baseImageUrl + replace + ".jpg");
 		}
+
+//		WebElement pageA = Helper.chromeDriver.findElement(By.xpath("//*[@id=\"pager\"]/a[3]"));
+//		String baseUrl = pageA.getAttribute("href");
+//		baseUrl = baseUrl.substring(0, baseUrl.length() - 1);
+//
+//		
+//		for(int i=1;i<=max;i++) {
+//			String nextUrl=baseUrl+String.valueOf(i);
+//			Element nextPage=Helper.getBodyBySelenium(nextUrl);
+//			
+//			Element img = nextPage.selectFirst("#qTcms_Pic_middle > tbody > tr > td > img");
+//			imageUrls.add(img.attr("src"));
+//		}
+
 		return imageUrls;
 
 	}
@@ -87,9 +90,8 @@ public class FengZhiDongManExtractor implements Extractor {
 	@Override
 	public String etrBookName(Element infoNode) {
 		// TODO Auto-generated method stub
-		String text = infoNode.select("#content > h2").text();
-		text = Tools.trimText(text);
-		text=text.split("\\s+")[0];
+		String text = infoNode.selectFirst("div.mh-date-info-name > h4 > a").text();
+
 		return text;
 	}
 
@@ -97,20 +99,21 @@ public class FengZhiDongManExtractor implements Extractor {
 	public String etrAuthor(Element infoNode) {
 		// TODO Auto-generated method stub
 
-		return "";
+		return infoNode.selectFirst("p.mh-pdt30.works-info-tc > span > em > a").text();
 
 	}
 
 	@Override
 	public String etrBrief(Element infoNode) {
-		// TODO Auto-generated method stub
-		return "";
+
+		return infoNode.selectFirst("#workint > p").text().trim();
 	}
 
 	@Override
 	public String etrCoverImageUrl(Element infoNode) {
 		// TODO Auto-generated method stub
-		Element el = infoNode.select("div.left.fl > img.imgCover").first();
+		Element el = infoNode.select("body > div:nth-child(7) > div.mh-works-date.fl > div > div > div > a > img")
+				.first();
 
 		return el.attr("src");
 	}
@@ -118,7 +121,7 @@ public class FengZhiDongManExtractor implements Extractor {
 	@Override
 	public String etrChapterName(Element infoNode) {
 		// TODO Auto-generated method stub
-		String text = infoNode.select("#pjax-container > h1").first().text();
+		String text = infoNode.select("body > div.w996.title.pr > h2").first().text();
 		text = Tools.trimText(text);
 		return text;
 	}
@@ -150,40 +153,31 @@ public class FengZhiDongManExtractor implements Extractor {
 	@Override
 	public String weibsiteName() {
 		// TODO Auto-generated method stub
-		return "FengZhiDongMan";
+		return "AimeiManhua";
 	}
 
 	@Override
 	public String startUrl() {
 		// TODO Auto-generated method stub
-		return "https://manhua.fzdm.com/";
-	}
-
-	private String extImageUrl(String input) {
-		String result;
-		int positon = input.indexOf(".jpg");
-		result = input.substring(positon - 23, positon + 4);
-		result = result.replaceAll("[\\s+=\";]", "");
-		result=result.replaceAll("varmhurl", "");
-		return result;
+		return "https://www.aimimh.com/rank";
 	}
 
 	@Override
 	public String bookListPageToolType() {
 		// TODO Auto-generated method stub
-		return "selenium";
+		return "jsoup";
 	}
 
 	@Override
 	public String bookPageToolType() {
 		// TODO Auto-generated method stub
-		return "selenium";
+		return "jsoup";
 	}
 
 	@Override
 	public String chapterPageToolType() {
 		// TODO Auto-generated method stub
-		return "selenium";
+		return "jsoup";
 	}
 
 	@Override

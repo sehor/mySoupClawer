@@ -14,12 +14,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import clawer.extractor.Extractor;
+import clawer.util.BookType;
 import clawer.util.Helper;
 import clawer.util.Tools;
 
 public class ManHua160Extractor implements Extractor {
 
-	private final String rootUrl = "https://www.mh160.xyz/kanmanhua";
+	private final String rootUrl = "https://www.mh160.xyz";
 
 	@Override
 	public List<String> getBookUrls(String startUrl) {
@@ -39,10 +40,14 @@ public class ManHua160Extractor implements Extractor {
 
 		List<String> urls = new ArrayList<>();
 		for (Element e : aTags) {
-			System.out.println(e.select("p").text().trim());
-			urls.add(e.attr("abs:href"));
+			urls.add(this.rootUrl+e.attr("href"));
 		}
 		Collections.reverse(urls);
+
+//		List<WebElement> aTags=Helper.chromeDriver.findElements(By.cssSelector("#mh-chapter-list-ol-0 > li > a"));
+//		for(WebElement e:aTags) {
+//			urls.add(e.getAttribute("href"));
+//		}
 		return urls;
 
 	}
@@ -50,18 +55,17 @@ public class ManHua160Extractor implements Extractor {
 	@Override
 	public List<String> getChapterImageUrls(Element chapterPage) {
 		List<String> imageUrls = new ArrayList<>();
-		Element image=chapterPage.selectFirst("#qTcms_Pic_middle > tbody > tr > td > img");
-		String imageUrl=image.attr("src");
-		String baseImageUrl=imageUrl.substring(0,imageUrl.length()-"0001.jpg".length());
-		
+		Element image = chapterPage.selectFirst("#qTcms_Pic_middle > tbody > tr > td > img");
+		String imageUrl = image.attr("src");
+		String baseImageUrl = imageUrl.substring(0, imageUrl.length() - "0001.jpg".length());
 
 		Element span = chapterPage.selectFirst("#k_total");
 		int max = Integer.valueOf(span.text().replaceAll("\"", ""));
-		
-		for(int i=1;i<=max;i++) {
-			String numStr=String.valueOf(i);
-			String replace="0000".substring(0,4-numStr.length())+numStr;
-			imageUrls.add(baseImageUrl+replace+".jpg");
+
+		for (int i = 1; i <= max; i++) {
+			String numStr = String.valueOf(i);
+			String replace = "0000".substring(0, 4 - numStr.length()) + numStr;
+			imageUrls.add(baseImageUrl + replace + ".jpg");
 		}
 
 //		WebElement pageA = Helper.chromeDriver.findElement(By.xpath("//*[@id=\"pager\"]/a[3]"));
@@ -76,8 +80,6 @@ public class ManHua160Extractor implements Extractor {
 //			Element img = nextPage.selectFirst("#qTcms_Pic_middle > tbody > tr > td > img");
 //			imageUrls.add(img.attr("src"));
 //		}
-
-		imageUrls.forEach(e -> System.out.println(e));
 
 		return imageUrls;
 
@@ -101,14 +103,15 @@ public class ManHua160Extractor implements Extractor {
 
 	@Override
 	public String etrBrief(Element infoNode) {
-	
+
 		return infoNode.selectFirst("#workint > p").text().trim();
 	}
 
 	@Override
 	public String etrCoverImageUrl(Element infoNode) {
 		// TODO Auto-generated method stub
-		Element el = infoNode.select("body > div:nth-child(7) > div.mh-works-date.fl > div > div > div > a > img").first();
+		Element el = infoNode.select("body > div:nth-child(7) > div.mh-works-date.fl > div > div > div > a > img")
+				.first();
 
 		return el.attr("src");
 	}
@@ -157,7 +160,6 @@ public class ManHua160Extractor implements Extractor {
 		return "https://www.mh160.xyz/kanmanhua/allhit/";
 	}
 
-
 	@Override
 	public String bookListPageToolType() {
 		// TODO Auto-generated method stub
@@ -174,5 +176,11 @@ public class ManHua160Extractor implements Extractor {
 	public String chapterPageToolType() {
 		// TODO Auto-generated method stub
 		return "selenium";
+	}
+	
+	@Override
+	public BookType bookType() {
+		// TODO Auto-generated method stub
+		return BookType.Cartoon;
 	}
 }

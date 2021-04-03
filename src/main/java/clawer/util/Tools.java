@@ -1,5 +1,7 @@
 package clawer.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -7,6 +9,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Tools {
+	public static final String Base_Save_Path = "D:/cartoon/images/origin";
 	public static long extAndToNumber(String input) {
 		input = input.replaceAll("[\\s+\\-_;]", "");
 		System.out.println(input);
@@ -74,5 +77,7 @@ public class Tools {
 		}
 		return text.trim().replaceAll("[_\\-\\?？\\!！——]", "").replaceAll("\\s+", " ");
 	}
+	
+
 
 }

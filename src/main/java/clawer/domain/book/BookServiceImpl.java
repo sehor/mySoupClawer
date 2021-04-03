@@ -8,6 +8,8 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
+import clawer.data.PageModel;
+
 @Service
 public class BookServiceImpl implements BookService {
 	@Autowired
@@ -88,6 +90,33 @@ public class BookServiceImpl implements BookService {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public List<Book> getBookByName(String bookName) {
+		// TODO Auto-generated method stub
+		List<Book> books=repository.findByName(bookName);
+		return books;
+	}
+
+	@Override
+	public PageModel<Book> getBookByPage(int pageIndex, int pageSize) {
+		// TODO Auto-generated method stub
+		Query query=new Query();
+		PageModel<Book> page=new PageModel<>();
+		page.setPageIndex(pageIndex);
+		page.setPageSize(pageSize);
+		long count=options.count(query, Book.class);
+		page.setTotal(count);
+		
+		query.skip(page.getSkip()).limit(pageSize);
+		query.fields().include("webSiteName").include("name").include("author").include("url").include("chapterIds");
+		
+		List<Book> books=options.find(query, Book.class);
+		System.out.println(books.get(0).getChapterIds().size());
+		page.getData().addAll(books);
+		
+		return page;
 	}
 
 }

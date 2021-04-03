@@ -59,14 +59,13 @@ public class DefaultBookFactory2 {
 	}
 
 	public DefaultBookFactory2() {
-		initUrlTree();
+		
 	}
 	
 	public List<Book> buildBooks() {
 
-		if (isUpdateUrlTree) {
-			updateUrlTreeBookUrlsFromWebsite();
-		}
+		initUrlTree();
+		
 		// 未处理的book urls
 		List<String> notYetHandledBookUrls = DataUtils.differStringList(urlTree.getAllBookUrls(),
 				urlTree.getBookUrls());
@@ -103,6 +102,7 @@ public class DefaultBookFactory2 {
             	System.out.println("already exist at other website");
             	continue;
             }
+            System.out.println("book.... "+bookName);
 			//新建或从数据库获取一个book
 			Book book = defaultBookFactory.bookService.findOneBookByUrl(bookurl);
 			book.setName(bookName);
@@ -129,6 +129,7 @@ public class DefaultBookFactory2 {
 					this.errors.add(chapterUrl + ": notFoundedChapterName");
 					continue;
 				}
+				System.out.println("Chapter.... "+chapterName);
 				chapter.setName(chapterName);
 				setChapter(chapter, chapterUrl, chapterIndex);
 				defaultBookFactory.chapterService.updateChapter(chapter); // 因为images未处理，只更新，也就是不把id放进book；
@@ -221,9 +222,11 @@ public class DefaultBookFactory2 {
 		return this;
 	}
 
-	private DefaultBookFactory2 initUrlTree() {
+	private void initUrlTree() {
 		this.urlTree = defaultBookFactory.urlTreeService.getByName(this.extractor.weibsiteName());
-		return this;
+		if(isUpdateUrlTree) {
+			updateUrlTreeBookUrlsFromWebsite();
+		}
 	}
 
 	

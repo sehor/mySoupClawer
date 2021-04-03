@@ -41,7 +41,7 @@ public class Book {
 	private List<String> notYetHandledChapterUrls=new ArrayList<>();
 
 	
-	
+	private String bookType;
 	
 
 	public String getBrief() {
@@ -151,6 +151,15 @@ public class Book {
 		this.notYetHandledChapterUrls = notYetHandledChapterUrls;
 	}
 
+	public String getBookType() {
+		return bookType;
+	}
+
+	public void setBookType(String bookType) {
+		this.bookType = bookType;
+	}
+
+ 
   
    	
 }

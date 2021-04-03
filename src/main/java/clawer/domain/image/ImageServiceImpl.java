@@ -17,13 +17,11 @@ public class ImageServiceImpl implements ImageService {
 	@Autowired
 	ChapterService chapterService;
 	@Autowired
-	SaveImage saveImage;
-	@Autowired
 	MongoOperations operations;
 
 	@Override
-	public Image addImage(Image image,Chapter chapter) {
-		Image saved=repository.save(image);
+	public Image addImage(Image image, Chapter chapter) {
+		Image saved = repository.save(image);
 		chapter.getImageIds().add(saved.getId());
 		chapterService.updateChapter(chapter);
 		return saved;
@@ -50,18 +48,27 @@ public class ImageServiceImpl implements ImageService {
 	}
 
 	@Override
-	public List<Image> getAllImage(){
-	   return repository.findAll();
+	public List<Image> getAllImage() {
+
+		Query query = new Query();
+		query.limit(10);
+		List<Image> images = operations.find(query, Image.class);
+		return images;
 	}
 
 	@Override
 	public void downloadAndSave(List<Image> images) {
 		// TODO Auto-generated method stub
 
-		for(Image image:images) {
-			 saveImage.saveImageToFile(image);
+		for (Image image : images) {
+			if (image.isCompleted()) {
+				continue;
+			}
+			SaveImage.saveImageToFile(image);
+			if (image.isCompleted()) {
+				repository.save(image);
+			}
 		}
 	}
 
 }
-

@@ -15,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import clawer.data.DataUtils;
+import clawer.data.PageModel;
 import clawer.domain.chapter.Chapter;
-import clawer.extractor.FengZhiDongMan.FengZhiDongManExtractor;
+import clawer.extractor.manhua160.ManHua160Extractor;
 import clawer.extractor.website.kankan.InfoExtractor_KanKan;
 import clawer.extractor.website.kankan.KanKanUrlExtractor;
 
@@ -56,6 +57,12 @@ public class BookController {
 
 		return service.getAllBook();
 	}
+	
+	@GetMapping("/getAll/page")
+	public PageModel<Book> getAllviaPage(@PathParam(value = "pageIndex") int pageIndex,@PathParam(value = "pageSize") int pageSize) {
+
+		return service.getBookByPage( pageIndex, pageSize);
+	}
 
 	@GetMapping("/bookUrls")
 	public List<Object> getBookUrls(@PathParam(value = "websiteName") String websiteName) {
@@ -79,7 +86,7 @@ public class BookController {
 	@GetMapping("/updateFromWebsite2")
 	public List<Book> updatFromWebsite2(){
 		DefaultBookFactory2 factory=new DefaultBookFactory2();
-		List<Book> books=factory.setIsUpdateUrlTree(true).setExtractor(new FengZhiDongManExtractor()).buildBooks();
+		List<Book> books=factory.setIsUpdateUrlTree(false).setExtractor(new ManHua160Extractor()).buildBooks();
 		
 		return books;
 	}
